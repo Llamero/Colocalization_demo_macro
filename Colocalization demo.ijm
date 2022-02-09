@@ -26,15 +26,20 @@ s_overlap = Dialog.getNumber();
 show_coloc = Dialog.getCheckbox();
 font_size = Dialog.getNumber();
 setFont("Sans Serif", font_size);
-
 //Generate sphere movie
 y_center = round(i_height/2);
-x_center_step = (i_width)/n_frames;
+x_center = i_width;
 z_center = round((i_depth/2)-s1_radius+(s_overlap/2));
+run("3D Draw Shape", "size="+2*i_width+","+i_height+","+i_depth+" center="+x_center+","+y_center+","+z_center+" radius="+s1_radius+","+s1_radius+","+s1_radius+" vector1=1.0,0.0,0.0 vector2=0.0,1.0,0.0 res_xy=1.000 res_z=1.000 unit=pix value=255 display=[New stack]");
+selectWindow("Shape3D");
+rename("ref1");
+x_center_step = (i_width)/n_frames;
 for(a=1; a<=n_frames; a++){
 	showProgress(a, n_frames*2);
+	selectWindow("ref1");
 	x_center = round(a*x_center_step);
-	run("3D Draw Shape", "size="+i_width+","+i_height+","+i_depth+" center="+x_center+","+y_center+","+z_center+" radius="+s1_radius+","+s1_radius+","+s1_radius+" vector1=1.0,0.0,0.0 vector2=0.0,1.0,0.0 res_xy=1.000 res_z=1.000 unit=pix value=255 display=[New stack]");
+	makeRectangle(x_center, 0, i_width, i_height);
+	run("Duplicate...", "title=Shape3D duplicate");
 	if(isOpen("C1")){
 		run("Concatenate...", "  title=C1 open image1=C1 image2=Shape3D");
 	}
@@ -43,12 +48,21 @@ for(a=1; a<=n_frames; a++){
 		rename("C1");
 	}
 }
+close("ref1");
+
+y_center = round(i_height/2);
+x_center = i_width;
 z_center = round((i_depth/2)+s2_radius-(s_overlap/2));
+run("3D Draw Shape", "size="+2*i_width+","+i_height+","+i_depth+" center="+x_center+","+y_center+","+z_center+" radius="+s2_radius+","+s2_radius+","+s2_radius+" vector1=1.0,0.0,0.0 vector2=0.0,1.0,0.0 res_xy=1.000 res_z=1.000 unit=pix value=255 display=[New stack]");
+selectWindow("Shape3D");
+rename("ref2");
 x_center_step = (i_width)/n_frames;
 for(a=1; a<=n_frames; a++){
 	showProgress(a+n_frames, n_frames*2);
+	selectWindow("ref2");
 	x_center = round(i_width-a*x_center_step);
-	run("3D Draw Shape", "size="+i_width+","+i_height+","+i_depth+" center="+x_center+","+y_center+","+z_center+" radius="+s2_radius+","+s2_radius+","+s2_radius+" vector1=1.0,0.0,0.0 vector2=0.0,1.0,0.0 res_xy=1.000 res_z=1.000 unit=pix value=255 display=[New stack]");
+	makeRectangle(x_center, 0, i_width, i_height);
+	run("Duplicate...", "title=Shape3D duplicate");
 	if(isOpen("C2")){
 		run("Concatenate...", "  title=C2 open image1=C2 image2=Shape3D");
 	}
@@ -57,6 +71,7 @@ for(a=1; a<=n_frames; a++){
 		rename("C2");
 	}
 }
+close("ref2");
 
 //Generate 3D coloc stack
 run("Merge Channels...", "c2=C1 c6=C2 create ignore");
