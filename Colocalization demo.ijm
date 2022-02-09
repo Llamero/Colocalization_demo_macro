@@ -29,7 +29,7 @@ setFont("Sans Serif", font_size);
 
 //Generate sphere movie
 y_center = round(i_height/2);
-x_center_step = (i_width-s1_radius)/n_frames;
+x_center_step = (i_width)/n_frames;
 z_center = round((i_depth/2)-s1_radius+(s_overlap/2));
 for(a=1; a<=n_frames; a++){
 	showProgress(a, n_frames*2);
@@ -44,7 +44,7 @@ for(a=1; a<=n_frames; a++){
 	}
 }
 z_center = round((i_depth/2)+s2_radius-(s_overlap/2));
-x_center_step = (i_width-s2_radius)/n_frames;
+x_center_step = (i_width)/n_frames;
 for(a=1; a<=n_frames; a++){
 	showProgress(a+n_frames, n_frames*2);
 	x_center = round(i_width-a*x_center_step);
